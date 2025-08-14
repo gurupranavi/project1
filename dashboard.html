@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Management System - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ff85a2;
+            --primary-dark: #ff6b8b;
+            --secondary: #ffb6c1;
+            --success: #a8e6cf;
+            --warning: #ffd3b6;
+            --danger: #ffaaa5;
+            --light: #fff9fb;
+            --dark: #4a4a4a;
+            --gray: #d8bfd8;
+            --light-gray: #f8e1e7;
+            --background: #fff0f5;
+            --card-bg: #ffffff;
+            --text: #4a4a4a;
+            --admin-accent: #d8bfd8;
+            --manager-accent: #ffb6c1;
+            --employee-accent: #ff85a2;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+          transition: all 0.3 s ease;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100 vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250 px;
+            background: linear-gradient'(135 deg, #ffcce6 0%, #ffb3d9 100%)';
+            color: var(--dark);
+            padding: 20 px 0;
+            position: fixed;
+            height: 100 vh;
+            transition: all 0.3 s ease;
+            z-index: 1000;
+            box-shadow: 5 px 0 15 px rgba(0, 0, 0, 0.1);
+        } 
+    
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            padding: 0 20 px 20 px;
+            border-bottom: 1 px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header img {
+            width: 40 px;
+            height: 40 px;
+            border-radius: 50%;
+            margin-right: 10 px;
+        }
+
+        .sidebar-header h3 {
+            font-size: 16 px;
+            font-weight: 600;
+            margin-bottom: 3 px;
+        }
+
+        .sidebar-header p {
+            font-size: 12 px;
+            opacity: 0.8;
+        }
+
+        .sidebar-menu {
+            padding: 20 px 0;
+        }
+
+        .sidebar-menu h4 {
+            font-size: 12 px;
+            text-transform: uppercase;
+            letter-spacing: 1 px;
+            padding: 0 20 px 10 px;
+            opacity: 0.6;
+        }
+
+        .sidebar-menu ul {
+            list-style: none;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 12 px 20 px;
+            color: var(--dark);
+            text-decoration: none;
+            transition: all 0.3 s ease;
+            position: relative;
+        }
+
+        .sidebar-menu li a:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .sidebar-menu li a.active {
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .sidebar-menu li a.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4 px;
+            background: var(--primary);
+        }
+
+        .sidebar-menu li a i {
+            margin-right: 10 px;
+            font-size: 18 px;
+            width: 20 px;
+            text-align: center;
+            color: var(--primary);
+        }
+
+        /* Logout link styles */
+        .sidebar-menu .logout-link {
+            margin-top: 20 px;
+            border-top: 1 px solid rgba(0, 0, 0, 0.1);
+            padding-top: 20 px;
+        }
+        
+        .sidebar-menu .logout-link a {
+            color: var(--danger) !important;
+        }
+        
+        .sidebar-menu .logout-link a:hover {
+            background: rgba(255, 170, 165, 0.2) !important;
+        }
+        
+        .sidebar-menu .logout-link i {
+            color: var(--danger) !important;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 250 px;
+            transition: all 0.3 s ease;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15 px 30 px;
+            background: var(--card-bg);
+            box-shadow: 0 2 px 10 px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1 px solid var(--light-gray);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--light-gray);
+            border-radius: 30 px;
+            padding: 8 px 15 px;
+            width: 300 px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            width: 100%;
+            padding: 5 px 10 px;
+            outline: none;
+            color: var(--text);
+        }
+
+        .search-bar i {
+            color: var(--gray);
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .notification {
+            position: relative;
+            margin-right: 20 px;
+            cursor: pointer;
+        }
+
+        .notification i {
+            font-size: 20 px;
+            color: var(--gray);
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -5 px;
+            right: -5 px;
+            background: var(--danger);
+            color: white;
+            width: 18 px;
+            height: 18 px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10 px;
+            font-weight: bold;
+        }
+
+        /* User profile dropdown styles */
+        .user-profile-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .user-profile img {
+            width: 35 px;
+            height: 35 px;
+            border-radius: 50%;
+            margin-right: 10 px;
+        }
+
+        .user-profile p {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: var(--card-bg);
+            min-width: 160 px;
+            box-shadow: 0 px 8 px 16 px 0 px rgba(0,0,0,0.1);
+            z-index: 1;
+            border-radius: 5 px;
+            overflow: hidden;
+            border: 1 px solid var(--light-gray);
+        }
+        
+        .dropdown-content a {
+            color: var(--text);
+            padding: 12 px 16 px;
+            text-decoration: none;
+            display: block;
+            font-size: 14 px;
+            transition: all 0.3 s ease;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: var(--light-gray);
+        }
+        
+        .dropdown-content a.logout-dropdown {
+            color: var(--danger);
+        }
+        
+        .user-profile-dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 30 px;
+        }
+
+        .welcome-banner {
+            background: linear-gradient(135 deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 30 px;
+            border-radius: 10 px;
+            margin-bottom: 30 px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10 px 20 px rgba(255, 133, 162, 0.2);
+            animation: fadeIn 0.5 s ease;
+        }
+
+        .welcome-banner.admin {
+            background: linear-gradient'(135 deg, var(--admin-accent) 0%, #c9a0dc 100%)';
+        }
+
+        .welcome-banner.manager {
+            background: linear-gradient'(135 deg, var(--manager-accent) 0%, #ff9eb5 100%)';
+        }
+
+        .welcome-banner.employee {
+            background: linear-gradient'(135 deg, var(--employee-accent) 0%, #ff6b8b 100%)';
+        }
+
+        .welcome-banner h1 {
+            font-size: 28 px;
+            margin-bottom: 10 px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .welcome-banner p {
+            opacity: 0.9;
+            max-width: 600 px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .welcome-banner .decoration {
+            position: absolute;
+            right: 20 px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 120 px;
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250 px, 1 fr));
+            gap: 20 px;
+            margin-bottom: 30 px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 10 px;
+            padding: 20 px;
+            box-shadow: 0 5 px 15 px rgba(0, 0, 0, 0.05);
+            transition: all 0.3 s ease;
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.5 s ease;
+            border: 1 px solid var(--light-gray);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5 px);
+            box-shadow: 0 10 px 25 px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5 px;
+            height: 100%;
+        }
+
+        .stat-card.pending::before {
+            background: var(--warning);
+        }
+
+        .stat-card.approved::before {
+            background: var(--success);
+        }
+
+        .stat-card.rejected::before {
+            background: var(--danger);
+        }
+
+        .stat-card.total::before {
+            background: var(--primary);
+        }
+
+        .stat-card .stat-value {
+            font-size: 32 px;
+            font-weight: 700;
+            margin: 10 px 0;
+            color: var(--text);
+        }
+
+        .stat-card .stat-label {
+            color: var(--gray);
+            font-size: 14 px;
+        }
+
+        .stat-card .stat-icon {
+            position: absolute;
+            right: 20 px;
+            top: 20 px;
+            font-size: 40 px;
+            opacity: 0.2;
+            color: var(--primary);
+        }
+
+        /* Recent Requests */
+        .recent-requests {
+            background: var(--card-bg);
+            border-radius: 10 px;
+            padding: 25 px;
+            box-shadow: 0 5 px 15 p x rgba(0, 0, 0, 0.05);
+            animation: fadeIn 0.7 s ease;
+            border: 1 px solid var(--light-gray);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20 px;
+        }
+
+        .section-header h2 {
+            font-size: 20 px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .section-header a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 14 px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-header a i {
+            margin-left: 5 px;
+            font-size: 12 px;
+        }
+
+        .requests-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .requests-table th {
+            text-align: left;
+            padding: 12 px 15 px;
+            color: var(--gray);
+            font-weight: 500;
+            font-size: 14 px;
+            border-bottom: 1 px solid var(--light-gray);
+            background: var(--light-gray);
+        }
+
+        .requests-table td {
+            padding: 15 px;
+            border-bottom: 1 px solid var(--light-gray);
+            font-size: 14 px;
+            color: var(--text);
+        }
+
+        .requests-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .requests-table tr:hover {
+            background: rgba(255, 133, 162, 0.05);
+        }
+
+        .status-badge {
+            padding: 5 px 10 px;
+            border-radius: 20 px;
+            font-size: 12 px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .status-badge.pending {
+            background: rgba(255, 211, 182, 0.3);
+            color: #e67e22;
+        }
+
+        .status-badge.approved {
+            background: rgba(168, 230, 207, 0.3);
+            color: #27ae60;
+        }
+
+        .status-badge.rejected {
+            background: rgba(255, 170, 165, 0.3);
+            color: #e74c3c;
+        }
+
+        .status-badge.cancelled {
+            background: rgba(216, 191, 216, 0.3);
+            color: #9b59b6;
+        }
+
+        .employee-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .employee-info img {
+            width: 35 px;
+            height: 35 px;
+            border-radius: 50%;
+            margin-right: 10 px;
+            object-fit: cover;
+        }
+
+        .action-btn {
+            padding: 5 px 10 px;
+            border-radius: 5 px;
+            font-size: 12 px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3 s ease;
+            margin-right: 5 px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .action-btn.view {
+            background: rgba(255, 133, 162, 0.1);
+            color: var(--primary);
+        }
+
+        .action-btn.view:hover {
+            background: rgba(255, 133, 162, 0.2);
+        }
+
+        .action-btn.approve {
+            background: rgba(168, 230, 207, 0.1);
+            color: var(--success);
+        }
+
+        .action-btn.approve:hover {
+            background: rgba(168, 230, 207, 0.2);
+        }
+
+        .action-btn.reject {
+            background: rgba(255, 170, 165, 0.1);
+            color: var(--danger);
+        }
+
+        .action-btn.reject:hover {
+            background: rgba(255, 170, 165, 0.2);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200 px, 1 fr));
+            gap: 20 px;
+            margin-top: 30 px;
+        }
+
+        .quick-action-card {
+            background: var(--card-bg);
+            border-radius: 10 px;
+            padding: 20 px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 5 px 15 px rgba(0, 0, 0, 0.05);
+            transition: all 0.3 s ease;
+            cursor: pointer;
+            animation: slideUp 0.5 s ease;
+            border: 1 px solid var(--light-gray);
+        }
+
+        .quick-action-card:hover {
+            transform: translateY(-5 px);
+            box-shadow: 0 10 px 25 px rgba(0, 0, 0, 0.1);
+        }
+
+        .quick-action-card i {
+            font-size: 30 px;
+            margin-bottom: 15 px;
+            color: var(--primary);
+        }
+
+        .quick-action-card h3 {
+            font-size: 16 px;
+            margin-bottom: 5 px;
+            color: var(--text);
+        }
+
+        .quick-action-card p {
+            color: var(--gray);
+            font-size: 13 px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20 px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70 px;
+                overflow: hidden;
+            }
+
+            .sidebar-header h3, 
+            .sidebar-header p,
+            .sidebar-menu h4,
+            .sidebar-menu li a span {
+                display: none;
+            }
+
+            .sidebar-menu li a {
+                justify-content: center;
+            }
+
+            .sidebar-menu li a i {
+                margin-right: 0;
+                font-size: 20 px;
+            }
+
+            .main-content {
+                margin-left: 70 px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .search-bar {
+                display: none;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <img src="https://ui-avatars.com/api/?name=Jane+Doe&background=ff85a2&color=fff" alt="User">
+                <div>
+                    <h3>Jane Doe</h3>
+                    <p>Employee</p>
+                </div>
+            </div>
+            
+            <div class="sidebar-menu">
+                <h4>Menu</h4>
+                <ul>
+                    <li><a href="#" class="active"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
+                    <li><a href="#"><i class="fas fa-calendar-alt"></i> <span>Leave Requests</span></a></li>
+                    <li><a href="#"><i class="fas fa-user"></i> <span>Profile</span></a></li>
+                </ul>
+                
+                <!-- Logout Option in Sidebar -->
+                <div class="logout-link">
+                    <ul>
+                        <li><a href="#"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Navigation -->
+            <div class="top-nav">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                
+                <div class="user-actions">
+                    <div class="notification">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">3</span>
+                    </div>
+                    
+                    <!-- User Profile with Dropdown -->
+                    <div class="user-profile-dropdown">
+                        <div class="user-profile">
+                            <img src="https://ui-avatars.com/api/?name=Jane+Doe&background=ff85a2&color=fff" alt="User">
+                            <p>Jane Doe <i class="fas fa-caret-down"></i></p>
+                        </div>
+                        <div class="dropdown-content">
+                            <a href="#"><i class="fas fa-user"></i> Profile</a>
+                            <a href="#" class="logout-dropdown"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Welcome Banner -->
+                <div class="welcome-banner employee">
+                    <h1>Welcome back, Jane!</h1>
+                    <p>Here's what's happening with your leave requests and team activities.</p>
+                    <div class="decoration">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card pending" style="animation-delay: 0.1s;">
+                        <div class="stat-value">2</div>
+                        <div class="stat-label">Pending Requests</div>
+                        <i class="fas fa-clock stat-icon"></i>
+                    </div>
+                    
+                    <div class="stat-card approved" style="animation-delay: 0.2s;">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">Approved Requests</div>
+                        <i class="fas fa-check-circle stat-icon"></i>
+                    </div>
+                    
+                    <div class="stat-card rejected" style="animation-delay: 0.3s;">
+                        <div class="stat-value">1</div>
+                        <div class="stat-label">Rejected Requests</div>
+                        <i class="fas fa-times-circle stat-icon"></i>
+                    </div>
+                    
+                    <div class="stat-card total" style="animation-delay: 0.4s;">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Days Taken This Year</div>
+                        <i class="fas fa-calendar-check stat-icon"></i>
+                    </div>
+                </div>
+
+                <!-- Recent Requests -->
+                <div class="recent-requests">
+                    <div class="section-header">
+                        <h2>Recent Leave Requests</h2>
+                        <a href="#">View All <i class="fas fa-chevron-right"></i></a>
+                    </div>
+                    
+                    <table class="requests-table">
+                        <thead>
+                            <tr>
+                                <th>Leave Type</th>
+                                <th>Dates</th>
+                                <th>Days</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Vacation</td>
+                                <td>Jun 10 - Jun 15, 2023</td>
+                                <td>5</td>
+                                <td>
+                                    <span class="status-badge approved">
+                                        Approved
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="#" class="action-btn view">View</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Sick Leave</td>
+                                <td>Jun 18, 2023</td>
+                                <td>1</td>
+                                <td>
+                                    <span class="status-badge pending">
+                                        Pending
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="#" class="action-btn view">View</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Personal Day</td>
+                                <td>Jun 20, 2023</td>
+                                <td>1</td>
+                                <td>
+                                    <span class="status-badge rejected">
+                                        Rejected
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="#" class="action-btn view">View</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <div class="quick-action-card" onclick="window.location.href='#'" style="animation-delay: 0.2s;">
+                        <i class="fas fa-plus-circle"></i>
+                        <h3>New Leave Request</h3>
+                        <p>Submit a new leave application</p>
+                    </div>
+                    
+                    <div class="quick-action-card" onclick="window.location.href='#'" style="animation-delay: 0.3s;">
+                        <i class="fas fa-history"></i>
+                        <h3>Request History</h3>
+                        <p>View your past leave requests</p>
+                    </div>
+                    
+                    <div class="quick-action-card" onclick="window.location.href='#'" style="animation-delay: 0.4s;">
+                        <i class="fas fa-calendar"></i>
+                        <h3>Calendar</h3>
+                        <p>View your leave calendar</p>
+                    </div>
+                    
+                    <div class="quick-action-card" onclick="window.location.href='#'" style="animation-delay: 0.5s;">
+                        <i class="fas fa-user-cog"></i>
+                        <h3>Profile Settings</h3>
+                        <p>Update your personal information</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple animation triggers
+        document.addEventListener('DOMContentLoaded', function() {
+            // Notification bell click handler
+            const notificationBell = document.querySelector('.notification');
+            if (notificationBell) {
+                notificationBell.addEventListener('click', function() {
+                    alert('You have 3 new notifications');
+                });
+            }
+            
+            // Quick action card click handlers
+            document.querySelectorAll('.quick-action-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const link = this.getAttribute('onclick').match(/window\.location\.href='([^']+)'/)[1];
+                    window.location.href = link;
+                });
+            });
+            
+            // Animate elements when they come into view
+            const animateOnScroll = function() {
+                const elements = document.querySelectorAll('.stat-card, .quick-action-card');
+                elements.forEach(element => {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+                    
+                    if (elementPosition < windowHeight - 100) {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            };
+            
+            window.addEventListener('scroll', animateOnScroll);
+            animateOnScroll(); // Run once on load
+
+            // Confirm before logging out
+            document.querySelectorAll('.logout-link a, .logout-dropdown').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!confirm('Are you sure you want to logout?')) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
