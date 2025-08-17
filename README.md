@@ -1,7 +1,7 @@
 # project1
 # Leave Management System
 >  Built by *vempati Guru Pranavi for Flipkart Task-1  
-> 🗓 Last Updated: *31 august 2025*
+> 🗓 Last Updated: *30 july 2025*
 A comprehensive web-based Leave Management System built with Flask, SQLAlchemy, and modern HTML/CSS.
 ## Overview
 -
